@@ -14,6 +14,7 @@ Welcome to my digital portfolio! This project showcases my skills as a Computer 
 ## ✨ Features
 
 ### 🎨 **Interactive Design**
+- **Cricket Ball Loading Animation**: Realistic cricket ball rolls across screen on page load/refresh
 - **Dynamic Particle System**: Animated background particles that respond to screen size
 - **Video Avatar**: Interactive video element with smart playback controls
 - **Glass Morphism UI**: Modern glass-panel design with curved navigation
@@ -23,6 +24,7 @@ Welcome to my digital portfolio! This project showcases my skills as a Computer 
 - **Stadium Navigation**: Home → Stadium, About → Player Profile, Projects → Match Highlights, Contact → Commentary Box
 - **Sports-Inspired UI**: Cricket-themed terminology throughout the interface
 - **Dynamic Backgrounds**: Layered background system with smooth transitions
+- **"Match Delayed Due to Rain"**: Fun cricket-themed placeholder for sections under construction 🌧️
 
 ### 📱 **Modern Web Technologies**
 - **React 19**: Latest React features with hooks and modern patterns

@@ -1,8 +1,41 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './portfolio.css'
 
 function App() {
   const videoRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    // Show loading animation for 1.2 seconds (matching ball animation)
+    const loadingTimer = setTimeout(() => {
+      const loader = document.querySelector('.cricket-ball-loader');
+      if (loader) {
+        loader.classList.add('fade-out');
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 200); // Fade-out duration
+      } else {
+        setIsLoading(false);
+      }
+    }, 1200);
+
+    return () => clearTimeout(loadingTimer);
+  }, []);
+
+  // Mouse tracking for cursor ball
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
   useEffect(() => {
     // Particles canvas
     const canvas = document.getElementById('stadiumParticles');
@@ -158,6 +191,34 @@ function App() {
 
   return (
     <>
+      {/* Cricket Ball Loading Animation */}
+      {isLoading && (
+        <div className="cricket-ball-loader">
+          <img 
+            src="/cricket.png" 
+            alt="Cricket Ball" 
+            className="cricket-ball-image"
+          />
+        </div>
+      )}
+
+      {/* Cursor Cricket Ball */}
+      {!isLoading && (
+        <div 
+          className="cursor-ball"
+          style={{
+            left: `${mousePosition.x}px`,
+            top: `${mousePosition.y}px`,
+          }}
+        >
+          <img 
+            src="/cricket.png" 
+            alt="Cursor Cricket Ball" 
+            className="cursor-ball-image"
+          />
+        </div>
+      )}
+      
       <div className="bg-image" aria-hidden="true"></div>
       <div className="bg-image-2" aria-hidden="true"></div>
       <canvas id="stadiumParticles" aria-hidden="true"></canvas>
@@ -313,34 +374,10 @@ function App() {
                 
                 <div className="slider__panel" id="experience-panel">
                   <div className="experience__container">
-                    <div className="experience__category">
-                      <h4 className="experience__category-title">Professional Experience</h4>
-                      <ul className="about__chips">
-                        <li className="skill-chip skill-chip--primary">2+ Years Development</li>
-                        <li className="skill-chip skill-chip--primary">5+ Projects Completed</li>
-                        <li className="skill-chip skill-chip--primary">3+ Internships</li>
-                        <li className="skill-chip skill-chip--primary">Open Source Contributor</li>
-                      </ul>
-                    </div>
-                    
-                    <div className="experience__category">
-                      <h4 className="experience__category-title">Achievements</h4>
-                      <ul className="about__chips">
-                        <li className="skill-chip skill-chip--secondary">Hackathon Winner</li>
-                        <li className="skill-chip skill-chip--secondary">Research Paper Published</li>
-                        <li className="skill-chip skill-chip--secondary">Technical Blog Writer</li>
-                        <li className="skill-chip skill-chip--secondary">Mentor & Tutor</li>
-                      </ul>
-                    </div>
-                    
-                    <div className="experience__category">
-                      <h4 className="experience__category-title">Certifications</h4>
-                      <ul className="about__chips">
-                        <li className="skill-chip skill-chip--accent">AWS Certified</li>
-                        <li className="skill-chip skill-chip--accent">Google Cloud</li>
-                        <li className="skill-chip skill-chip--accent">Machine Learning</li>
-                        <li className="skill-chip skill-chip--accent">Full Stack Development</li>
-                      </ul>
+                    <div className="match-delayed">
+                      <div className="rain-icon">🌧️</div>
+                      <h3 className="match-delayed__title">Match Delayed Due to Rain</h3>
+                      <p className="match-delayed__message">Experience section is currently under construction. Check back later for career highlights!</p>
                     </div>
                   </div>
                 </div>

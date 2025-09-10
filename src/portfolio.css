@@ -308,6 +308,135 @@ html, body {
   padding: 10px 0;
 }
 
+/* Match Delayed Message */
+.match-delayed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.rain-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  animation: rainBounce 2s ease-in-out infinite;
+}
+
+.match-delayed__title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 15px;
+  font-family: 'Orbitron', monospace;
+}
+
+.match-delayed__message {
+  font-size: 1rem;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 400px;
+}
+
+@keyframes rainBounce {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Cricket Ball Loading Animation */
+.cricket-ball-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.cricket-ball-image {
+  width: 250px;
+  height: 250px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  animation: ballRoll 1.2s linear forwards;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
+  will-change: transform;
+}
+
+@keyframes ballRoll {
+  0% {
+    transform: translate(-400px, -60vh) rotate(0deg) scale(1.2);
+    opacity: 1;
+  }
+  25% {
+    transform: translate(25vw, -30vh) rotate(180deg) scale(2.0);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(50vw, 0vh) rotate(360deg) scale(2.8);
+    opacity: 1;
+  }
+  75% {
+    transform: translate(75vw, 30vh) rotate(540deg) scale(2.0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(120vw, 60vh) rotate(720deg) scale(1.2);
+    opacity: 1;
+  }
+}
+
+/* Fade out animation for the loader */
+.cricket-ball-loader.fade-out {
+  animation: fadeOut 0.2s ease-out forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* Cursor Cricket Ball */
+.cursor-ball {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  z-index: 9999;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: none;
+}
+
+.cursor-ball-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  animation: cursorBallFloat 2s ease-in-out infinite;
+}
+
+@keyframes cursorBallFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translateY(-3px) rotate(180deg) scale(1.1);
+  }
+}
+
 .skills__category,
 .experience__category {
   text-align: center;
