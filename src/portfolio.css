@@ -178,19 +178,26 @@ html, body {
 
 .slider__tab {
   padding: 16px 32px;
-  border: 1px solid rgba(0, 212, 255, 0.4);
-  background: rgba(255, 255, 255, 0.08);
-  color: #00d4ff;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  color: #ffffff;
   border-radius: 30px;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 1.1rem;
   cursor: pointer;
   transition: all 0.3s ease, color 0.2s ease;
   backdrop-filter: blur(15px);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   position: relative;
   overflow: hidden;
+  outline: none;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+.slider__tab:focus {
+  outline: none;
 }
 
 /* Hover text change functionality for slider tabs */
@@ -217,13 +224,22 @@ html, body {
   box-sizing: border-box;
 }
 
-.slider__tab.active,
-.slider__tab:hover {
-  background: rgba(255, 255, 255, 0.12);
+.slider__tab.active {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.15));
   color: transparent;
-  border-color: rgba(0, 212, 255, 0.6);
+  border-color: #ffffff;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(255, 255, 255, 0.3), 0 0 20px rgba(255, 255, 255, 0.2);
+  text-shadow: none;
+}
+
+.slider__tab:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+  color: transparent;
+  border-color: rgba(255, 255, 255, 0.8);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 212, 255, 0.2);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2), 0 0 15px rgba(255, 255, 255, 0.15);
+  text-shadow: none;
 }
 
 /* Show hover text on hover */
@@ -240,8 +256,8 @@ html, body {
 }
 
 /* Ensure smooth transition back when not hovering */
-.slider__tab:not(:hover) {
-  color: #00d4ff;
+.slider__tab:not(:hover):not(.active) {
+  color: #ffffff;
   transition-delay: 0s;
 }
 
@@ -263,15 +279,22 @@ html, body {
 
 .slider__content {
   position: relative;
-  min-height: auto;
+  min-height: 0;
   max-height: none;
-  overflow: visible;
+  overflow: hidden;
   margin: 0;
   padding: 0;
+  transition: min-height 0.3s ease;
+}
+
+.slider__content:has(.slider__panel.active) {
+  min-height: 200px;
 }
 
 .slider__panel {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   opacity: 0;
   transform: translateY(20px);
@@ -279,14 +302,16 @@ html, body {
   pointer-events: none;
   margin: 0;
   padding: 0;
-  display: none;
+  height: 0;
+  overflow: hidden;
 }
 
 .slider__panel.active {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
-  display: block;
+  height: auto;
+  position: relative;
 }
 
 /* Skills Container */

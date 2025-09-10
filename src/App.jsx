@@ -162,14 +162,22 @@ function App() {
     
     function handleTabClick(e) {
       const targetTab = e.target.dataset.tab;
+      const targetPanel = document.getElementById(`${targetTab}-panel`);
       
-      // Remove active class from all tabs and panels
-      sliderTabs.forEach(tab => tab.classList.remove('active'));
-      sliderPanels.forEach(panel => panel.classList.remove('active'));
-      
-      // Add active class to clicked tab and corresponding panel
-      e.target.classList.add('active');
-      document.getElementById(`${targetTab}-panel`).classList.add('active');
+      // Check if the clicked tab is already active
+      if (e.target.classList.contains('active')) {
+        // If it's active, toggle it off (collapse)
+        e.target.classList.remove('active');
+        targetPanel.classList.remove('active');
+      } else {
+        // If it's not active, remove active from all and activate this one
+        sliderTabs.forEach(tab => tab.classList.remove('active'));
+        sliderPanels.forEach(panel => panel.classList.remove('active'));
+        
+        // Add active class to clicked tab and corresponding panel
+        e.target.classList.add('active');
+        targetPanel.classList.add('active');
+      }
     }
     
     sliderTabs.forEach(tab => {
@@ -277,13 +285,13 @@ function App() {
             
             <div className="about__slider reveal">
               <div className="slider__tabs">
-                <button className="slider__tab active" data-tab="skills" data-hover="Skills">Batting Style</button>
+                <button className="slider__tab" data-tab="skills" data-hover="Skills">Batting Style</button>
                 <button className="slider__tab" data-tab="education" data-hover="Education">Training</button>
                 <button className="slider__tab" data-tab="experience" data-hover="Experience">Career Stats</button>
               </div>
               
               <div className="slider__content">
-                <div className="slider__panel active" id="skills-panel">
+                <div className="slider__panel" id="skills-panel">
                   <div className="skills__container">
                     <div className="skills__category">
                       <h4 className="skills__category-title">Programming Languages</h4>
