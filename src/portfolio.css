@@ -178,9 +178,9 @@ html, body {
 
 .slider__tab {
   padding: 16px 32px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(0, 212, 255, 0.4);
   background: rgba(255, 255, 255, 0.08);
-  color: var(--muted);
+  color: #00d4ff;
   border-radius: 30px;
   font-weight: 700;
   font-size: 1.1rem;
@@ -219,10 +219,11 @@ html, body {
 
 .slider__tab.active,
 .slider__tab:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.12);
   color: transparent;
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(0, 212, 255, 0.6);
   transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 212, 255, 0.2);
 }
 
 /* Show hover text on hover */
@@ -240,7 +241,7 @@ html, body {
 
 /* Ensure smooth transition back when not hovering */
 .slider__tab:not(:hover) {
-  color: var(--muted);
+  color: #00d4ff;
   transition-delay: 0s;
 }
 
