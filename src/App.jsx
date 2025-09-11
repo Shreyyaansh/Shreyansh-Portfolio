@@ -417,7 +417,7 @@ function App() {
               </article>
 
               <article className="project-card">
-                <h3>Chitralaay – Artist Marketplace</h3>
+                <h3>Chitralaya – Artist Marketplace</h3>
                 <p>Marketplace for showcasing and selling artwork with uploads, browsing, and secure orders.</p>
                 <div className="project-card__meta">Node.js · MongoDB · HTML/CSS/JS</div>
                 <div className="project-card__actions">
