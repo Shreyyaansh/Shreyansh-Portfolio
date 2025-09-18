@@ -399,11 +399,20 @@ function App() {
             <h2 className="section__title">Projects</h2>
             <div className="projects__grid">
               <article className="project-card">
-                <h3>MERN E‑commerce</h3>
-                <p>Full‑stack shop with customer & admin portals, dashboards, cart/checkout, Razorpay payments.</p>
+                <h3>Chitralaya – Artist Marketplace</h3>
+                <p>Marketplace for showcasing and selling artwork with uploads, browsing, and secure orders.</p>
+                <div className="project-card__meta">Node.js · MongoDB · HTML/CSS/JS</div>
+                <div className="project-card__actions">
+                  <a className="project-btn" href="https://chitralaya.vercel.app/" target="_blank" rel="noopener noreferrer">View Project</a>
+                </div>
+              </article>
+
+              <article className="project-card">
+                <h3>Café Culture – MERN Stack</h3>
+                <p>Full-stack Café Culture website with customer & admin portals, dashboards, cart/checkout, table-based ordering, and MongoDB Atlas.</p>
                 <div className="project-card__meta">MongoDB · Express · React · Node</div>
                 <div className="project-card__actions">
-                  <a className="project-btn" href="#">View Project</a>
+                  <a className="project-btn" href="https://cafe-culture.vercel.app/" target="_blank" rel="noopener noreferrer">View Project</a>
                 </div>
               </article>
 
@@ -411,15 +420,6 @@ function App() {
                 <h3>Diabetes Prediction (ML)</h3>
                 <p>Supervised model to predict risk with an interactive Streamlit app and clear metrics.</p>
                 <div className="project-card__meta">Python · Pandas · scikit‑learn · Streamlit</div>
-                <div className="project-card__actions">
-                  <a className="project-btn" href="#">View Project</a>
-                </div>
-              </article>
-
-              <article className="project-card">
-                <h3>Chitralaya – Artist Marketplace</h3>
-                <p>Marketplace for showcasing and selling artwork with uploads, browsing, and secure orders.</p>
-                <div className="project-card__meta">Node.js · MongoDB · HTML/CSS/JS</div>
                 <div className="project-card__actions">
                   <a className="project-btn" href="#">View Project</a>
                 </div>
