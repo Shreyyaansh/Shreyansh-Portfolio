@@ -5,6 +5,14 @@ function App() {
   const videoRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  
+  function replayVideo() {
+    if (!videoRef.current) return;
+    try { videoRef.current.currentTime = 0; } catch {}
+    try { videoRef.current.playbackRate = 1; } catch {}
+    const p = videoRef.current.play();
+    if (p && typeof p.catch === 'function') p.catch(() => {});
+  }
 
   useEffect(() => {
     // Show loading animation for 1.2 seconds (matching ball animation)
@@ -83,10 +91,9 @@ function App() {
     renderParticles();
 
     // Play hero video on load
-    if (videoRef.current) {
-      const p = videoRef.current.play();
-      if (p && typeof p.catch === 'function') p.catch(() => {});
-    }
+    replayVideo();
+
+    
 
     // Layered background like the reference: body gets a class per section
     const bg2 = document.querySelector('.bg-image-2');
@@ -122,10 +129,8 @@ function App() {
               isCurrentlyInHome = true;
               // Replay if we've left home and come back, or it's the first time
               if (hasLeftHome || !isPlayingOnce) {
-                try { videoRef.current.currentTime = 0; } catch {}
-                const p = videoRef.current.play();
+                replayVideo();
                 isPlayingOnce = true;
-                if (p && typeof p.catch === 'function') p.catch(() => {});
               }
             }
           } else if (!entry.isIntersecting) {
@@ -139,21 +144,11 @@ function App() {
     }
 
     // Track ended to freeze at the last frame and mark as not playing
-    function handleEnded() {
-      if (!videoRef.current) return;
-      try { videoRef.current.pause(); videoRef.current.currentTime = Math.max(0, videoRef.current.duration - 0.001); } catch {}
-      isPlayingOnce = false;
-    }
-    if (videoRef.current) videoRef.current.addEventListener('ended', handleEnded);
+    
 
     // Clicking any Home link should replay once
     const homeLinks = Array.from(document.querySelectorAll('a[href="#home"]'));
-    function handleHomeClick() {
-      if (!videoRef.current) return;
-      try { videoRef.current.currentTime = 0; } catch {}
-      const p = videoRef.current.play();
-      if (p && typeof p.catch === 'function') p.catch(() => {});
-    }
+    function handleHomeClick() { replayVideo(); }
     homeLinks.forEach((el) => el.addEventListener('click', handleHomeClick));
 
     // Slider functionality
@@ -189,7 +184,7 @@ function App() {
       if (rafId) cancelAnimationFrame(rafId);
       if (sectionObserver && aboutSection) sectionObserver.unobserve(aboutSection);
       if (homeObserver && homeEl) homeObserver.unobserve(homeEl);
-      if (videoRef.current) videoRef.current.removeEventListener('ended', handleEnded);
+      
       homeLinks.forEach((el) => el.removeEventListener('click', handleHomeClick));
       sliderTabs.forEach(tab => {
         tab.removeEventListener('click', handleTabClick);
@@ -259,16 +254,10 @@ function App() {
                   <video
                     ref={videoRef}
                     className="avatar"
-                    src="/hello.mp4"
+                    src="/hello.webm"
                     muted
                     playsInline
                     alt="Shreyansh avatar"
-                    onEnded={(e) => {
-                      e.currentTarget.pause();
-                      try {
-                        e.currentTarget.currentTime = Math.max(0, e.currentTarget.duration - 0.001);
-                      } catch {}
-                    }}
                   />
                 </div>
               </div>
