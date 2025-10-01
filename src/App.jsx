@@ -154,6 +154,7 @@ function App() {
     // Slider functionality
     const sliderTabs = document.querySelectorAll('.slider__tab');
     const sliderPanels = document.querySelectorAll('.slider__panel');
+    const sliderContent = document.querySelector('.slider__content');
     
     function handleTabClick(e) {
       const targetTab = e.target.dataset.tab;
@@ -179,6 +180,27 @@ function App() {
       tab.addEventListener('click', handleTabClick);
     });
 
+    // Fallback for browsers that don't support :has()
+    function updateSliderFallback() {
+      if (!sliderContent) return;
+      const anyActive = Array.from(sliderPanels).some(p => p.classList.contains('active'));
+      if (anyActive) sliderContent.classList.add('slider--open');
+      else sliderContent.classList.remove('slider--open');
+    }
+
+    // Observe mutations to panels to update fallback class
+    let panelObserver;
+    try {
+      panelObserver = new MutationObserver(updateSliderFallback);
+      sliderPanels.forEach(p => panelObserver.observe(p, { attributes: true, attributeFilter: ['class'] }));
+    } catch (e) {
+      // MutationObserver not available or failed; attach a simple click handler as fallback
+      sliderTabs.forEach(t => t.addEventListener('click', updateSliderFallback));
+    }
+
+    // initial sync
+    updateSliderFallback();
+
     return () => {
       window.removeEventListener('resize', resizeCanvas);
       if (rafId) cancelAnimationFrame(rafId);
@@ -189,6 +211,7 @@ function App() {
       sliderTabs.forEach(tab => {
         tab.removeEventListener('click', handleTabClick);
       });
+      if (panelObserver) panelObserver.disconnect();
     };
   }, []);
 

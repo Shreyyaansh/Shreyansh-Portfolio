@@ -291,6 +291,11 @@ html, body {
   min-height: 200px;
 }
 
+/* Fallback for browsers that don't support :has() */
+.slider__content.slider--open {
+  min-height: 200px;
+}
+
 .slider__panel {
   position: absolute;
   top: 0;
@@ -1024,22 +1029,46 @@ body.bg-about .bg-image-2 { opacity: 1; }
   }
 }
 
-.panel-inner { display: grid; grid-template-columns: 480px 1fr; min-height: 380px; }
+.panel-inner { display: grid; grid-template-columns: minmax(560px, 76%) minmax(260px, 24%); align-items: stretch; gap: 0; min-height: 380px; }
 
 /* Curved-left nav container using clip-path path() so right edge is curved */
 .nav-curved {
-  padding: 14px 10px 14px 14px;
+  padding: 14px 190px 14px 18px; /* increased right padding so pills extend further toward avatar */
   background: transparent;
+  /* primary: complex path for Chromium browsers */
   -webkit-clip-path: path('M0,0 H560 C560,0 620,90 620,180 C620,270 560,370 560,440 C560,520 620,560 620,560 H0 Z');
-          clip-path: path('M0,0 H560 C560,0 620,90 620,180 C620,270 560,370 560,440 C560,520 620,560 620,560 H0 Z');
+  clip-path: path('M0,0 H560 C560,0 620,90 620,180 C620,270 560,370 560,440 C560,520 620,560 620,560 H0 Z');
+  /* fallback for browsers that don't support path(): use an ellipse-based clip (placed after path()) */
+  clip-path: ellipse(70% 100% at 0% 50%);
 }
-.nav-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 18px; }
+
+/* Right-extending background so the curved nav visually spans under the avatar */
+.nav-curved::before {
+  content: '';
+  position: absolute;
+  /* move pseudo-element further right and widen it so nav visually extends under the avatar */
+  /* push the pseudo-element further right and broaden it to visually reach under the avatar */
+  right: -16%;
+  top: 2%;
+  bottom: 2%;
+  width: 80%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius: 260px 56px 56px 260px / 72% ;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(0.6px);
+}
+
+/* Put the pills above the pseudo element */
+.nav-list { position: relative; z-index: 2; }
+.nav-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 18px; align-content: start; }
+.nav-pill { width: 100%; }
 .nav-pill {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   height: 70px; 
-  padding: 0 24px; 
+  padding: 0 64px; 
   border-radius: 35px; 
   text-decoration: none;
   color: #ffffff; 
@@ -1048,6 +1077,7 @@ body.bg-about .bg-image-2 { opacity: 1; }
   text-transform: uppercase;
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.2),
@@ -1192,6 +1222,7 @@ body.bg-about .bg-image-2 { opacity: 1; }
   filter: drop-shadow(0 18px 40px rgba(0,0,0,.55));
   border-radius: 12px;
   object-fit: cover;
+  z-index: 6; /* ensure avatar sits above nav pseudo-element */
 }
 
 /* freeze image removed in simplified flow */
@@ -1328,6 +1359,13 @@ body.bg-about .bg-image-2 { opacity: 1; }
     flex-direction: column;
     gap: 1.5rem;
   }
+
+  /* Stack the panel columns on smaller screens so nav and avatar don't overlap or get pushed off-screen */
+  .panel-inner {
+    display: block;
+    grid-template-columns: none;
+    min-height: auto;
+  }
   
   .glass-panel {
     width: 100%;
@@ -1353,6 +1391,11 @@ body.bg-about .bg-image-2 { opacity: 1; }
     right: 40px;
     width: min(250px, 40vw);
     bottom: -10px;
+  }
+
+  /* Ensure the right panel (avatar) floats above the nav on touch devices */
+  .panel-right {
+    z-index: 3;
   }
   
   .pill {
@@ -1444,6 +1487,12 @@ body.bg-about .bg-image-2 { opacity: 1; }
     justify-content: center;
     align-items: center;
     padding: 1rem;
+  }
+
+  /* Make sure avatar sits above decorative backgrounds and particles on very small screens */
+  .avatar {
+    z-index: 5;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.45);
   }
   
   .pill {
