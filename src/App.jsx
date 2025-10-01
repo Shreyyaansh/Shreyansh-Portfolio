@@ -91,6 +91,22 @@ function App() {
     renderParticles();
 
     // Play hero video on load
+    // Safari / iOS have partial or no support for WebM with alpha channel.
+    // If the user is on Safari (macOS or iOS), swap to the provided MP4 fallback.
+    try {
+      const ua = navigator.userAgent || '';
+      const isIOS = /iP(hone|od|ad)/.test(ua);
+      const isSafari = /Version\/\d+.*Safari/.test(ua) && !/Chrome|Chromium|CriOS|FxiOS/.test(ua);
+      if ((isSafari || isIOS) && videoRef.current) {
+        // Only swap if fallback present and not already swapped
+        if (!videoRef.current.dataset.fallback) {
+          videoRef.current.src = '/yoo.mp4';
+          try { videoRef.current.load(); } catch (e) {}
+          videoRef.current.dataset.fallback = 'true';
+        }
+      }
+    } catch (e) {}
+
     replayVideo();
 
     
@@ -278,6 +294,8 @@ function App() {
                     ref={videoRef}
                     className="avatar"
                     src="/hello.webm"
+                    poster="/yo.png"
+                    preload="metadata"
                     muted
                     playsInline
                     alt="Shreyansh avatar"
