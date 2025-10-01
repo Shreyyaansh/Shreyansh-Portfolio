@@ -109,6 +109,103 @@ function App() {
 
     replayVideo();
 
+    // If we've swapped to the MP4 fallback (yoo.mp4) for Safari/iOS, create a canvas
+    // and perform a simple chroma-key (green-screen) removal on frames.
+    let chroma = { raf: null, canvas: null, ctx: null };
+    function startChromaKey() {
+      if (!videoRef.current) return;
+      // only when fallback is active
+      if (!videoRef.current.dataset || videoRef.current.dataset.fallback !== 'true') return;
+
+      const panelRight = document.querySelector('.panel-right');
+      if (!panelRight) return;
+
+      // create canvas
+      const canvas = document.createElement('canvas');
+      canvas.className = 'avatar-canvas';
+      // inline styles so it only applies here (as requested)
+      Object.assign(canvas.style, {
+        display: 'block',
+        position: 'absolute',
+        right: videoRef.current.style.right || '100px',
+        bottom: videoRef.current.style.bottom || '0px',
+        width: videoRef.current.offsetWidth + 'px',
+        height: videoRef.current.offsetHeight + 'px',
+        maxWidth: '52vw',
+        borderRadius: '12px',
+        zIndex: 6,
+        pointerEvents: 'none',
+        objectFit: 'cover'
+      });
+
+      // insert canvas in the same container as video; hide original video visually
+      panelRight.appendChild(canvas);
+      videoRef.current.style.visibility = 'hidden';
+
+      const ctx = canvas.getContext('2d');
+      chroma.canvas = canvas; chroma.ctx = ctx;
+
+      // adaptive sizing: use video's intrinsic size if available
+      function resizeCanvas() {
+        const vw = videoRef.current.videoWidth || videoRef.current.offsetWidth || 640;
+        const vh = videoRef.current.videoHeight || videoRef.current.offsetHeight || 360;
+        // downscale for performance if very large
+        const scale = vw > 800 ? 0.6 : 1;
+        canvas.width = Math.round(vw * scale);
+        canvas.height = Math.round(vh * scale);
+        // CSS size should match the displayed video size
+        canvas.style.width = (videoRef.current.offsetWidth || vw) + 'px';
+        canvas.style.height = (videoRef.current.offsetHeight || vh) + 'px';
+      }
+
+      function chromaFrame() {
+        if (!videoRef.current || videoRef.current.paused || videoRef.current.ended) {
+          chroma.raf = requestAnimationFrame(chromaFrame);
+          return;
+        }
+        try {
+          ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+          const frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const data = frame.data;
+          // Simple chroma key: remove pixels where green is dominant above thresholds
+          for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            // Condition: green significantly higher than red/blue and above a minimum
+            if (g > 100 && g > r * 1.2 && g > b * 1.2) {
+              data[i + 3] = 0; // set alpha to 0 (transparent)
+            }
+          }
+          ctx.putImageData(frame, 0, 0);
+        } catch (e) {
+          // drawing may fail if video not ready; ignore and retry
+        }
+        chroma.raf = requestAnimationFrame(chromaFrame);
+      }
+
+      // start when video can play
+      function onCanPlay() {
+        resizeCanvas();
+        if (!chroma.raf) chroma.raf = requestAnimationFrame(chromaFrame);
+      }
+
+      videoRef.current.addEventListener('loadeddata', onCanPlay);
+      videoRef.current.addEventListener('resize', resizeCanvas);
+
+      // store cleanup references on chroma
+      chroma.cleanup = () => {
+        if (chroma.raf) cancelAnimationFrame(chroma.raf);
+        try { videoRef.current.removeEventListener('loadeddata', onCanPlay); } catch {}
+        try { videoRef.current.removeEventListener('resize', resizeCanvas); } catch {}
+        if (chroma.canvas && chroma.canvas.parentNode) chroma.canvas.parentNode.removeChild(chroma.canvas);
+        if (videoRef.current) videoRef.current.style.visibility = '';
+      };
+    }
+
+    // start chroma key if needed (and after a short delay to ensure dataset flag set)
+    setTimeout(startChromaKey, 200);
+
     
 
     // Layered background like the reference: body gets a class per section
@@ -220,6 +317,8 @@ function App() {
     return () => {
       window.removeEventListener('resize', resizeCanvas);
       if (rafId) cancelAnimationFrame(rafId);
+      // cleanup chroma key canvas/RAF if it was started
+      try { if (typeof chroma !== 'undefined' && chroma && typeof chroma.cleanup === 'function') chroma.cleanup(); } catch (e) {}
       if (sectionObserver && aboutSection) sectionObserver.unobserve(aboutSection);
       if (homeObserver && homeEl) homeObserver.unobserve(homeEl);
       
@@ -294,7 +393,7 @@ function App() {
                     ref={videoRef}
                     className="avatar"
                     src="/hello.webm"
-                    poster="/yo.png"
+                    poster="/hehe.png"
                     preload="metadata"
                     muted
                     playsInline
