@@ -562,7 +562,7 @@ function App() {
             <h2 className="section__title">Contact</h2>
             <ul className="contact-icons">
               <li>
-                <a className="icon-btn" href="https://drive.google.com/file/d/1QEgbp6sRL4sH_EY3FVusA1QFCtiRGLkL/view?usp=sharing" target="_blank" rel="noreferrer">
+                <a className="icon-btn" href="https://drive.google.com/file/d/1urLyEfib9KMzyLfqg59W--6l1hCV2AGa/view?usp=drive_link" target="_blank" rel="noreferrer">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/></svg>
                   <span>Resume</span>
                 </a>
